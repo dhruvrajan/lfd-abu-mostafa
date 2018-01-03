@@ -289,3 +289,5 @@ tramp
 # cask packages
 .cask/
 
+chapters/
+data/
