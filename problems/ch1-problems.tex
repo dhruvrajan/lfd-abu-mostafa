@@ -1,0 +1,242 @@
+\documentclass[10pt]{article}
+ 
+\usepackage[margin=1in]{geometry}
+\usepackage{enumerate}
+\usepackage{amsmath,amsthm,amssymb, graphicx, multicol, array}
+\usepackage{relsize}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\BF}[1]{\mathbf{#1}}
+\newcommand{\RM}[1]{\mathrm{#1}}
+\newcommand{\T}{{\mathsmaller T}}
+
+\newenvironment{problem}[2][Problem]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+
+\newenvironment{exercise}[2][Exercise]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+
+\begin{document}
+ 
+\title{Learning From Data}
+\author{Dhruv Rajan\\
+Chapter 1. The Learning Problem}
+\maketitle
+ 
+\begin{exercise}{1.1}
+  Express each task in the framework of \textit{learning from
+    data}. Specify input space $\mathcal{X}$, output space
+  $\mathcal{Y}$, target function $f : \mathcal{X \rightarrow Y}$, and
+  dataset.
+\end{exercise}
+
+
+
+\begin{enumerate}
+\item \textit{Medical diagnosis} \\
+  $\mathcal{X}$: Medical history of past patients. This might include
+  history of specific illnesses, levels of certain chemical,
+  hereditary status for various genes/diseases, etc.\\
+  $\mathcal{Y}$: Diagnoses of past patients
+\item \textit{Handwritten Digit Recognition} \\
+  $\mathcal{X}$: Pictures of labeled digits. These may be represented
+  as a vector of pixels, or some condensed feature representation.\\
+  $\mathcal{Y}$: Human generated labels for these digits.
+\item \textit{Spam Email Classification} \\
+  $\mathcal{X}$: User emails, spread between spam/ham. Could be represented
+  as hot-vectors of keywords, word counts, etc.\\
+  $\mathcal{Y}$: Classifications of user emails
+\item \textit{Predicting how an electric load varies with price, temperature, day of the week.} \\
+  $\mathcal{X}$: Settings for the system, as a 3-vector: $\langle$
+  price, tempereature, day of week $\rangle$. Should
+  have wide spread of variation between each of these 3 features.\\
+  $\mathcal{Y}$: Measured loads for each setting
+\end{enumerate}
+
+
+
+\begin{exercise}{1.2}
+  Use perceptron to detect spam. Features include frequency of keywords; output +1 for spam.
+\end{exercise}
+
+\begin{enumerate}
+\item Positive Weight \\
+  promotions, medical words, save money, politics.
+\item Negative Weight \\
+  Regular words common in non-spam
+\item The bias term directly affects how much border-line email gets
+  classified as spam. It serves as a threshold, allowing the separating
+  plane to shift towards conservative of liberal thresholds.
+\end{enumerate}
+
+
+\begin{exercise}{1.3}
+  
+  Perceptron Learning Algorithm (PLA) update rule
+  \begin{enumerate}[a)]
+  \item Show that $g = y(t) {\mathbf w}^{\mathsmaller T} {\mathbf x}(t) < 0$ \\ \\
+    The hypothesis $h(t)$ is given by
+    $h(t) = \mathrm{sign} ({\mathbf w}^{\mathsmaller T} {\mathbf
+      x}(t))$.  For a misclassified point $\mathbf{x}(t)$, we know
+    that $\mathrm{sign}(y(t)) \neq \mathrm{sign}(h(t))$. Thus, the
+    product $g$ mentioned above must be negative, since exactly one of
+    $y(t)$ and $h(t)$ must be negative for some misclassified
+    $\mathbf{x}(t)$.
+
+  \item Show that
+    $ y(t) {\mathbf w}^{\mathsmaller T} (t+1) {\mathbf x}(t) > y(t)
+    {\mathbf w}^{\mathsmaller T} (t) {\mathbf x}(t)$
+
+    \begin{align*}
+      y(t) \big[ \mathbf{w}(t) &+ y(t)\mathbf{x}(t)\big] \mathbf{x}(t) \\
+      y(t) \big[ \mathbf{w}(t)\mathbf{x}(t) &+ y(t)\mathbf{x}^2(t)\big] \\
+      y(t)\mathbf{w}(t)\mathbf{x}(t) &+ y^2(t)\mathbf{x}^2(t) \\
+    \end{align*}
+
+    Since the factor $y^2(t)\mathbf{x}^2(t)$ is positive, when it is added,
+    it can only increase the initial product $h(t) y(t)$.
+
+  \item If the $h(t) \cdot y(t)$ becomes greater than 0, the point
+    $\textbf{x}(t)$ has become properly classified. Since this product
+    is strictly increased, by the result in (b), it is a step in the right direction.
+
+    We can see this geometrically as well.
+  \end{enumerate}
+\end{exercise}
+
+\begin{exercise}{1.4} Classify these situations as either learning or design.
+  \begin{enumerate}
+  \item Learning
+  \item Design
+  \item Learning
+  \item Design
+  \item Learning. Though one can optimize analytically for various
+    heuristics, the heuristic has to be picked, and this is a learning
+    problem.
+  \end{enumerate}
+\end{exercise}
+
+\begin{exercise}{1.6} Classify these situations according to their respective learning patterns.
+  \begin{enumerate}
+  \item Supervised
+  \item Reinforcement Learning
+  \item Unsupervised
+  \item Reinforcement Learning
+  \item Supervised Learning
+  \end{enumerate}
+\end{exercise}
+
+\begin{problem}{1.1}
+  There are two opaque bags, A, B. A has two black balls, B has 1 black ball, 1 white ball.
+  You pick a bag at random and select a ball from that bag (it is black). What is the probability
+  that the second ball in the bag is also black?
+
+  We want $P$(other ball from same bag is black$\vert$first ball is black). Bayes
+  rule gives us that
+  \begin{align}
+    P[A\cap B] = P[A \vert B] \cdot P[B] = P[B\vert A]\cdot P[A]
+  \end{align}
+  \begin{align*}
+    P[\mathrm{1st~black} \vert \mathrm{2nd~black}] &= P[\mathrm{2nd~black} \vert \mathrm{1st~black}] \cdot P[\mathrm{1st~black}] \\
+    P[\mathrm{2nd~black} \vert \mathrm{1st~black}] &= \frac{P[\mathrm{1st~black} \cap \mathrm{2nd~black}]}{P[\mathrm{1st~black}]} \\
+                                                   &= \frac{0.5}{0.75} \\
+                                                   &= \fbox{$\frac{2}{3}$}
+  \end{align*}
+\end{problem}
+
+\begin{problem}{1.2} Consider the two-dimensional perceptron
+  $h(x) = \mathrm{sign}(\mathbf{w}^{\mathsmaller T} \mathbf{x})$.
+  \begin{enumerate}[a)]
+  \item Show that the regions on the plaine where $h(x) = +1$ and
+    $h(x) = -1$ are separated by a line. Express this in
+    slope-intercept form.  The hypothesis is given by
+    \begin{align*}
+      h(\BF{x}) = \RM{sign}(\BF{w}^\T \BF{x})
+    \end{align*}
+
+    The boundary line is given by:
+    \begin{align*}
+      0 &= \BF{w}^\T \BF{x} \\
+        &= w_0 + w_1 \cdot x_1 + w_2 \cdot x_2
+    \end{align*}
+    This is a linear equation in two variables. Thus, the boundary must be linear. To find
+    the equation of this line in slope intercept form, we can solve for $x_2$ in terms of $x_1$.
+    \begin{align*}
+      x_2 = \frac{-w_1}{w_2}\cdot x_1 - \frac{w_0}{w_2}
+    \end{align*}
+
+  \item Line for $w$ = [1, 2, 3] is
+    $x_2 = -\frac{2}{3} \cdot x_1 - \frac{1}{3}$. Line for
+    $w = [-1, -2, -3]$ is $x_2 = -\frac{2}{3} - \frac{1}{3}$.
+  \end{enumerate}
+\end{problem}
+
+\begin{problem}{1.3} Prove that the PLA eventually converges to a linear
+  separator for separable data. Assume $\BF{w}(0) = 0$.
+
+  \begin{enumerate}[a)]
+  \item Let $\rho = \RM{min}_{1 \leq n \leq N}~y_n(\BF{w}^{*\T} \BF{x}_n)$. Show that $\rho > 0$.
+    We know that $\BF{w}^*$ correctly classifies all points. Thus, the
+    sign of the product $\BF{w}^{*\T} \BF{x}_n$ must match the sign of $y_n$.
+    When any two quantities of the same sign are multiplied, the resulting
+    value is postive, so $\rho > 0$.
+
+  \item Show that $\BF{w}(t)\BF{w}^* \geq \BF{w}^\T (t - 1)\BF{w}^* + \rho$, and conclude that
+    $\BF{w}(t)\BF{w}^* \geq t\rho$.
+
+    The update rule is as follows:
+    \begin{align*}
+      \BF{w}(t) = \BF{w}(t - 1) + y(t)\BF{x}(t)
+    \end{align*}
+    We can use this to reduce the left hand of the inequality:
+    \begin{align*}
+      \BF{w}(t)\BF{w}^*
+      &= \BF{w}^* \cdot [\BF{w}(t-1) + y(t)\BF{x}(t)] \\
+      &= \BF{w}^* \BF{w}(t-1) + \underbrace{\BF{w}^*y(t)\BF{x}(t)}_{\text{call this term $s$}}
+    \end{align*}
+    The term $s$ must be $\geq \rho$ since $\rho$ specifies the
+    minimum possible value (over all $t$) of this quantity. Since
+    $s \geq \rho$, the statement must remain true if we substitute
+    $\rho$ for $s$,
+    and thus, we have the first inequality. \\
+
+    Next, we want to show that $\BF{w}(t)\BF{w}^* \geq t\rho$. We show
+    this by induction. At time $t =0$:
+    \begin{align*}
+      \BF{w}^\T \cdot \BF{w}^* = 0 \geq 0
+      \cdot \rho~~~\checkmark
+    \end{align*}
+    Given that $\BF{w}(t)\BF{w}^* \geq t\rho$, we need to show this holds for time $t + 1$. From
+    the previous result, we have that
+    \begin{align*}
+      \BF{w}(t + 1)\BF{w}^*
+      &\geq \BF{w}(t)\BF{w}^* + \rho\\
+      &\geq t\rho + \rho \\
+      &\geq (t+1)\rho
+    \end{align*}
+
+  \item Show that $\|\BF{w}(t)\|^2 \leq \|\BF{w}(t-1)\|^2 + \|\BF{x}(t-1)\|^2$.
+    
+    This is a restatement of the triangle inequality.
+  \item Show that $\|\BF{w}(t)\|^2 \leq tR^2$ where $R = \RM{max}_{1 \leq n \leq N} \|x_n\|$
+    At time $t=0$
+    \begin{align*}
+      \|\BF{w}(t)\|^2 = 0 \leq 0\cdot R^2~~~\checkmark
+    \end{align*}
+    Given $\|\BF{w}(t)\|^2 \leq t \cdot R^2$, we need this to hold for time $t + 1$.
+    \begin{align*}
+      \|\BF{w}(t + 1)\|^2
+      &\leq \|\BF{w}(t)\|^2 + \|\BF{x}(t)\| \\
+      &\leq tR^2 + \|\BF{x}(t)\|
+    \end{align*}
+    It is necessarily the case that $R >= \|\BF{x}(t)\|$, since $R$ is the maximum (over all $t$)
+    of this quantity. Thus, we can substitute $R$ or $R^2$ in place of this expression.
+    \begin{align*}
+       \|\BF{w}(t + 1)\|^2
+      &\leq tR^2 + R^2 \\
+      &\leq (t + 1)R^2
+    \end{align*}
+
+  \end{enumerate}
+\end{problem}
+\end{document}
